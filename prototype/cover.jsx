@@ -43,15 +43,20 @@ function CoverScreen({ tw, onOpen, onTOC, onGlossary }) {
         }}>The<br/>Judas<br/>Strain</h1>
         <MonoSmall color={p.ink} style={{ display:'block', marginBottom:22 }}>VOL. 01 — PROJECT GRENDEL</MonoSmall>
 
-        {/* Field card placeholder */}
+        {/* Field card — real still from chapter 1 */}
         <div style={{ position:'relative', height:200, marginBottom:18, background: p.bg2, border:`1px solid ${p.ink}`, padding:4 }}>
-          <div style={{
-            position:'absolute', inset:4,
-            background: p.isDark
-              ? 'repeating-linear-gradient(45deg, #0E1A0E 0 6px, #0A130A 6px 12px)'
-              : 'repeating-linear-gradient(45deg, #C9BE9E 0 6px, #BDB18D 6px 12px)',
-          }}/>
-          <div style={{ position:'absolute', top:8, left:10, fontSize:9, letterSpacing:'0.18em', color: p.faint, background: p.bg, padding:'2px 6px', fontFamily:'"JetBrains Mono", monospace' }}>EXHIBIT A — STILL FRAME</div>
+          <img
+            src="https://raw.githubusercontent.com/dknos/Project-Grendel-A-JP4-Fan-WebNovel/HEAD/images/chapter-001/scene-1.webp"
+            alt="Exhibit A — still frame"
+            style={{
+              position:'absolute', inset:4, width:'calc(100% - 8px)', height:'calc(100% - 8px)',
+              objectFit:'cover',
+              filter: p.isDark
+                ? 'grayscale(0.55) contrast(1.05) brightness(0.7) sepia(0.15)'
+                : 'grayscale(0.45) contrast(1.05) sepia(0.18)',
+            }}
+          />
+          <div style={{ position:'absolute', top:8, left:10, fontSize:9, letterSpacing:'0.18em', color: p.faint, background: p.bg, padding:'2px 6px', fontFamily:'"JetBrains Mono", monospace', zIndex:1 }}>EXHIBIT A — STILL FRAME</div>
           {[[8,8,1,1],[8,'auto',1,0],['auto',8,0,1],['auto','auto',0,0]].map(([t,l,top,left],i)=>(
             <div key={i} style={{
               position:'absolute',

@@ -158,7 +158,31 @@ function ReaderScreen({
           <div style={{ fontSize:10, color: p.faint, marginTop:8 }}>{ch.epigraph.attribution}</div>
         </div>
 
-        {ch.paragraphs.map((para, i) => renderPara(para, i))}
+        {/* FIGURE — chapter still */}
+        <FigurePlate
+          p={p}
+          tag={`FIG. ${String(ch.n).padStart(2,'0')}.A`}
+          caption="Recovered still — scene one."
+          src={`https://raw.githubusercontent.com/dknos/Project-Grendel-A-JP4-Fan-WebNovel/HEAD/images/chapter-${String(ch.n).padStart(3,'0')}/scene-1.webp`}
+        />
+
+        {ch.paragraphs.map((para, i) => {
+          const out = [renderPara(para, i)];
+          // Insert animated intercept footage roughly at midpoint
+          if (i === Math.floor(ch.paragraphs.length / 2) - 1) {
+            out.push(
+              <FigurePlate
+                key={`fig-action-${i}`}
+                p={p}
+                tag={`INTERCEPT ${String(ch.n).padStart(2,'0')}.B`}
+                caption="Motion fragment — autoplay."
+                src={`https://raw.githubusercontent.com/dknos/Project-Grendel-A-JP4-Fan-WebNovel/HEAD/images/chapter-${String(ch.n).padStart(3,'0')}/action-1.webp`}
+                accent
+              />
+            );
+          }
+          return out;
+        })}
 
         {ornaments && (
           <div style={{ textAlign:'center', margin:'22px 0', color: p.faint, fontFamily:'"JetBrains Mono", monospace', fontSize:11, letterSpacing:'0.4em' }}>
@@ -270,6 +294,65 @@ function EvidenceSidecar({ p, chapter, onClose }) {
         </MonoSmall>
       </div>
     </div>
+  );
+}
+
+function FigurePlate({ p, tag, caption, src, accent }) {
+  const [loaded, setLoaded] = React.useState(false);
+  const [failed, setFailed] = React.useState(false);
+  const borderColor = accent ? p.accent : p.ink;
+  return (
+    <figure style={{
+      margin:'18px 0 22px',
+      border:`1px solid ${borderColor}`,
+      background: p.bg2,
+      padding: 4,
+      position:'relative',
+      fontFamily:'"JetBrains Mono", monospace',
+    }}>
+      <div style={{
+        position:'relative', width:'100%', aspectRatio:'16 / 10',
+        background: p.isDark
+          ? 'repeating-linear-gradient(45deg, #0E1A0E 0 6px, #0A130A 6px 12px)'
+          : 'repeating-linear-gradient(45deg, #C9BE9E 0 6px, #BDB18D 6px 12px)',
+        overflow:'hidden',
+      }}>
+        {!failed && (
+          <img
+            src={src}
+            alt={caption}
+            onLoad={() => setLoaded(true)}
+            onError={() => setFailed(true)}
+            style={{
+              position:'absolute', inset:0, width:'100%', height:'100%',
+              objectFit:'cover',
+              opacity: loaded ? 1 : 0, transition:'opacity 220ms ease-out',
+              filter: p.isDark
+                ? 'grayscale(0.55) contrast(1.05) brightness(0.7) sepia(0.15)'
+                : 'grayscale(0.4) contrast(1.05) sepia(0.18)',
+            }}
+          />
+        )}
+        {failed && (
+          <div style={{
+            position:'absolute', inset:0, display:'flex', alignItems:'center', justifyContent:'center',
+            color: p.faint, fontSize:10, letterSpacing:'0.18em',
+          }}>NO PLATE ON FILE</div>
+        )}
+        <div style={{
+          position:'absolute', top:6, left:8,
+          background: p.bg, color: p.faint, fontSize:9, letterSpacing:'0.18em',
+          padding:'2px 6px', border:`1px solid ${p.faint}55`,
+        }}>{tag}</div>
+      </div>
+      <figcaption style={{
+        display:'flex', justifyContent:'space-between',
+        padding:'6px 4px 2px', fontSize:10, letterSpacing:'0.12em', color: p.faint,
+      }}>
+        <span>{caption}</span>
+        <span>SRC · GRENDEL/IMG</span>
+      </figcaption>
+    </figure>
   );
 }
 

@@ -86,6 +86,25 @@ function TOCScreen({ tw, onOpen, onBack, onGlossary, currentChapter, completedCh
               <div style={{ width:22, fontSize:11, fontWeight:700, color: state==='now'?p.accent : state==='done'?p.ink : p.faint }}>
                 {String(c.n).padStart(2,'0')}
               </div>
+              <div style={{
+                width:46, height:34, flexShrink:0,
+                border:`1px solid ${state==='todo' ? p.faint+'88' : p.ink}`,
+                background: p.bg2, overflow:'hidden', position:'relative',
+              }}>
+                <img
+                  src={`https://raw.githubusercontent.com/dknos/Project-Grendel-A-JP4-Fan-WebNovel/HEAD/images/chapter-${String(c.n).padStart(3,'0')}/scene-1.webp`}
+                  alt=""
+                  loading="lazy"
+                  onError={(e)=>{ e.currentTarget.style.display='none'; }}
+                  style={{
+                    width:'100%', height:'100%', objectFit:'cover',
+                    filter: p.isDark
+                      ? 'grayscale(0.7) contrast(1.05) brightness(0.6) sepia(0.15)'
+                      : 'grayscale(0.55) contrast(1.05) sepia(0.18)',
+                    opacity: state==='todo' ? 0.55 : 1,
+                  }}
+                />
+              </div>
               <div style={{ flex:1 }}>
                 <div style={{
                   fontFamily:'"Newsreader", Georgia, serif', fontSize:16, fontWeight:500,
