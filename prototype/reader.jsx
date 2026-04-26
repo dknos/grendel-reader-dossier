@@ -9,7 +9,15 @@ function ReaderScreen({
   onTypeMenu, typeMenuOpen, onEvidence, evidenceOpen,
 }) {
   const p = getPalette(tw);
-  const ch = chapter === 3 ? window.NOVEL.sampleChapter : window.NOVEL_CH[chapter];
+  // Prefer the full repo-pulled chapter; fall back to the synthesized chapter 3 sample
+  const ch = window.NOVEL_CH_FULL?.[chapter] || window.NOVEL_CH?.[chapter] || (chapter === 3 ? window.NOVEL.sampleChapter : null);
+  if (!ch) {
+    return <div style={{ padding: 80, textAlign: 'center', color: '#888', fontFamily: 'monospace' }}>Chapter {chapter} not on file.</div>;
+  }
+  // Normalize legacy `paragraphs` arrays into a unified blocks array
+  const blocks = ch.blocks
+    ? ch.blocks
+    : (ch.paragraphs || []).map(text => ({ type: 'p', text }));
   const fs = tw.fontSize;
   const lh = tw.lineHeight;
   const justify = tw.justify;
@@ -158,30 +166,24 @@ function ReaderScreen({
           <div style={{ fontSize:10, color: p.faint, marginTop:8 }}>{ch.epigraph.attribution}</div>
         </div>
 
-        {/* FIGURE — chapter still */}
-        <FigurePlate
-          p={p}
-          tag={`FIG. ${String(ch.n).padStart(2,'0')}.A`}
-          caption="Recovered still — scene one."
-          src={`https://raw.githubusercontent.com/dknos/Project-Grendel-A-JP4-Fan-WebNovel/HEAD/images/chapter-${String(ch.n).padStart(3,'0')}/scene-1.webp`}
-        />
-
-        {ch.paragraphs.map((para, i) => {
-          const out = [renderPara(para, i)];
-          // Insert animated intercept footage roughly at midpoint
-          if (i === Math.floor(ch.paragraphs.length / 2) - 1) {
-            out.push(
+        {blocks.map((b, i) => {
+          if (b.type === 'fig') {
+            const isAction = /action-\d/.test(b.src);
+            const tag = isAction
+              ? `INTERCEPT ${String(ch.n).padStart(2,'0')}.${String.fromCharCode(65+i)}`
+              : `FIG. ${String(ch.n).padStart(2,'0')}.${String.fromCharCode(65+i)}`;
+            return (
               <FigurePlate
-                key={`fig-action-${i}`}
+                key={`fig-${i}`}
                 p={p}
-                tag={`INTERCEPT ${String(ch.n).padStart(2,'0')}.B`}
-                caption="Motion fragment — autoplay."
-                src={`https://raw.githubusercontent.com/dknos/Project-Grendel-A-JP4-Fan-WebNovel/HEAD/images/chapter-${String(ch.n).padStart(3,'0')}/action-1.webp`}
-                accent
+                tag={tag}
+                caption={b.alt || (isAction ? 'Motion fragment — autoplay.' : 'Recovered still.')}
+                src={b.src}
+                accent={isAction}
               />
             );
           }
-          return out;
+          return renderPara(b.text, i);
         })}
 
         {ornaments && (
