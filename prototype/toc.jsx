@@ -97,7 +97,7 @@ function TOCScreen({ tw, onOpen, onBack, onGlossary, currentChapter, completedCh
                   loading="lazy"
                   onError={(e)=>{ e.currentTarget.style.display='none'; }}
                   style={{
-                    width:'100%', height:'100%', objectFit:'cover',
+                    width:'100%', height:'100%', objectFit:'cover', objectPosition:'50% 30%',
                     filter: p.isDark
                       ? 'grayscale(0.7) contrast(1.05) brightness(0.6) sepia(0.15)'
                       : 'grayscale(0.55) contrast(1.05) sepia(0.18)',

@@ -313,11 +313,13 @@ function FigurePlate({ p, tag, caption, src, accent }) {
       fontFamily:'"JetBrains Mono", monospace',
     }}>
       <div style={{
-        position:'relative', width:'100%', aspectRatio:'16 / 10',
+        position:'relative', width:'100%',
+        minHeight: loaded ? 0 : 140,
         background: p.isDark
           ? 'repeating-linear-gradient(45deg, #0E1A0E 0 6px, #0A130A 6px 12px)'
           : 'repeating-linear-gradient(45deg, #C9BE9E 0 6px, #BDB18D 6px 12px)',
         overflow:'hidden',
+        display:'block',
       }}>
         {!failed && (
           <img
@@ -326,8 +328,7 @@ function FigurePlate({ p, tag, caption, src, accent }) {
             onLoad={() => setLoaded(true)}
             onError={() => setFailed(true)}
             style={{
-              position:'absolute', inset:0, width:'100%', height:'100%',
-              objectFit:'cover',
+              display:'block', width:'100%', height:'auto',
               opacity: loaded ? 1 : 0, transition:'opacity 220ms ease-out',
               filter: p.isDark
                 ? 'grayscale(0.55) contrast(1.05) brightness(0.7) sepia(0.15)'
@@ -337,8 +338,8 @@ function FigurePlate({ p, tag, caption, src, accent }) {
         )}
         {failed && (
           <div style={{
-            position:'absolute', inset:0, display:'flex', alignItems:'center', justifyContent:'center',
-            color: p.faint, fontSize:10, letterSpacing:'0.18em',
+            display:'flex', alignItems:'center', justifyContent:'center',
+            height: 140, color: p.faint, fontSize:10, letterSpacing:'0.18em',
           }}>NO PLATE ON FILE</div>
         )}
         <div style={{

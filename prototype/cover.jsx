@@ -50,7 +50,7 @@ function CoverScreen({ tw, onOpen, onTOC, onGlossary }) {
             alt="Exhibit A — still frame"
             style={{
               position:'absolute', inset:4, width:'calc(100% - 8px)', height:'calc(100% - 8px)',
-              objectFit:'cover',
+              objectFit:'cover', objectPosition:'50% 30%',
               filter: p.isDark
                 ? 'grayscale(0.55) contrast(1.05) brightness(0.7) sepia(0.15)'
                 : 'grayscale(0.45) contrast(1.05) sepia(0.18)',
